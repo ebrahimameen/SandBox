@@ -1,4 +1,4 @@
-package com.example.emsam.archcomp;
+package com.example.emsam.archcomp.model;
 
 import android.annotation.SuppressLint;
 

@@ -1,4 +1,4 @@
-package com.example.emsam.archcomp;
+package com.example.emsam.archcomp.view;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
@@ -14,12 +14,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.emsam.archcomp.R;
+import com.example.emsam.archcomp.model.UserData;
+import com.example.emsam.archcomp.viewmodel.UsersViewModel;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
     private UsersViewModel usersViewModel;
     private TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -40,8 +45,7 @@ public class MainActivity extends AppCompatActivity
                 if (userData.size() > 0)
                 {
                     textView.setText(userData.get(userData.size() - 1).toString());
-                }
-                else
+                } else
                 {
                     textView.setText("List is empty!");
                 }
@@ -58,14 +62,13 @@ public class MainActivity extends AppCompatActivity
 //                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com/search?q=postman"));
 //                startActivity(intent);
 
-               if ( usersViewModel.toggle())
-               {
-                   fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_pause));
-               }
-               else
-               {
-                   fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
-               }
+                if (usersViewModel.toggle())
+                {
+                    fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_pause));
+                } else
+                {
+                    fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
+                }
             }
         });
     }

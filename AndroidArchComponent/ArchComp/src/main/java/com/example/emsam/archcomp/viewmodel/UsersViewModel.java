@@ -1,9 +1,12 @@
-package com.example.emsam.archcomp;
+package com.example.emsam.archcomp.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+
+import com.example.emsam.archcomp.model.UserData;
+import com.example.emsam.archcomp.UserDataGenerator;
 
 import java.util.List;
 

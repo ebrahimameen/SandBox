@@ -5,6 +5,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
+import com.example.emsam.archcomp.model.UserData;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,8 +19,8 @@ public class UserDataGenerator implements Runnable
     private final AtomicBoolean pauseFlag = new AtomicBoolean(true);
     private static int counter;
     private final Random random = new Random();
-    private int MIN = 18;
-    private int MAX = 80;
+    private static final int MIN = 18;
+    private static final int MAX = 80;
     private MutableLiveData<List<UserData>> liveData;
 
     public UserDataGenerator()
@@ -30,12 +32,11 @@ public class UserDataGenerator implements Runnable
     @Override
     public void run()
     {
-        final List<UserData>listUserData = new ArrayList<>();
+        final List<UserData> listUserData = new ArrayList<>();
         while (!Thread.currentThread().isInterrupted())
         {
             try
             {
-
                 if (pauseFlag.get())
                 {
                     synchronized (pauseFlag)
@@ -48,7 +49,6 @@ public class UserDataGenerator implements Runnable
                 UserData user = new UserData(String.format("User Element_%d", (++counter)), age);
                 listUserData.add(user);
                 liveData.postValue(listUserData);
-//                Log.d(TAG, "run: "+ user.toString());
                 Thread.sleep(2500);
             } catch (InterruptedException e)
             {
