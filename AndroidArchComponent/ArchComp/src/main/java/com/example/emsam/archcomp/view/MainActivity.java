@@ -8,11 +8,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.emsam.archcomp.R;
 import com.example.emsam.archcomp.model.UserInfo;
@@ -23,7 +25,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
 {
     private UsersViewModel usersViewModel;
-    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,7 +34,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        textView = findViewById(R.id.tvUser);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
+        final UserInfoListAdapter adapter = new UserInfoListAdapter(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         usersViewModel = ViewModelProviders.of(this).get(UsersViewModel.class);
         usersViewModel.getUsers().observe(this, new Observer<List<UserInfo>>()
@@ -44,11 +48,11 @@ public class MainActivity extends AppCompatActivity
             {
                 if (infoList.size() > 0)
                 {
-                    textView.setText(infoList.get(infoList.size() - 1).toString());
+                    adapter.setUsers(infoList);
                 }
                 else
                 {
-                    textView.setText("List is empty!");
+                    Toast.makeText(MainActivity.this, "List is empty!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
