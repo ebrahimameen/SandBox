@@ -4,6 +4,7 @@
     "version": 1,
     "identityHash": "f92cf55ce577822a65bc48f2eadff7ff",
     "entities": [
+      {
         "tableName": "user_table",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL, `age` INTEGER NOT NULL)",
         "fields": [
