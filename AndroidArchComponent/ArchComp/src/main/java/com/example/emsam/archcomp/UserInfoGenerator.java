@@ -5,7 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
-import com.example.emsam.archcomp.model.UserData;
+import com.example.emsam.archcomp.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +13,17 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class UserDataGenerator implements Runnable
+public class UserInfoGenerator implements Runnable
 {
     private static final String TAG = "Gen";
-    private final AtomicBoolean pauseFlag = new AtomicBoolean(true);
-    private static int counter;
-    private final Random random = new Random();
     private static final int MIN = 18;
     private static final int MAX = 80;
-    private MutableLiveData<List<UserData>> liveData;
+    private static int counter;
+    private final AtomicBoolean pauseFlag = new AtomicBoolean(true);
+    private final Random random = new Random();
+    private MutableLiveData<List<UserInfo>> liveData;
 
-    public UserDataGenerator()
+    public UserInfoGenerator()
     {
         liveData = new MutableLiveData<>();
     }
@@ -32,7 +32,7 @@ public class UserDataGenerator implements Runnable
     @Override
     public void run()
     {
-        final List<UserData> listUserData = new ArrayList<>();
+        final List<UserInfo> userInfos = new ArrayList<>();
         while (!Thread.currentThread().isInterrupted())
         {
             try
@@ -46,11 +46,12 @@ public class UserDataGenerator implements Runnable
                     }
                 }
                 int age = random.nextInt(MAX - MIN) + MIN;
-                UserData user = new UserData(String.format("User Element_%d", (++counter)), age);
-                listUserData.add(user);
-                liveData.postValue(listUserData);
+                UserInfo user = new UserInfo(String.format("User Element_%d", (++counter)), age);
+                userInfos.add(user);
+                liveData.postValue(userInfos);
                 Thread.sleep(2500);
-            } catch (InterruptedException e)
+            }
+            catch (InterruptedException e)
             {
                 Log.e(TAG, "run: ", e);
             }
@@ -72,7 +73,7 @@ public class UserDataGenerator implements Runnable
         }
     }
 
-    public LiveData<List<UserData>> getListUserData()
+    public LiveData<List<UserInfo>> getListUserInfo()
     {
         return liveData;
     }

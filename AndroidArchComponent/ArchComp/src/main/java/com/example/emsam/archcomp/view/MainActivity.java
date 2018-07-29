@@ -9,13 +9,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.emsam.archcomp.R;
-import com.example.emsam.archcomp.model.UserData;
+import com.example.emsam.archcomp.model.UserInfo;
 import com.example.emsam.archcomp.viewmodel.UsersViewModel;
 
 import java.util.List;
@@ -36,16 +36,17 @@ public class MainActivity extends AppCompatActivity
         textView = findViewById(R.id.tvUser);
 
         usersViewModel = ViewModelProviders.of(this).get(UsersViewModel.class);
-        usersViewModel.getUsers().observe(this, new Observer<List<UserData>>()
+        usersViewModel.getUsers().observe(this, new Observer<List<UserInfo>>()
         {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onChanged(@Nullable final List<UserData> userData)
+            public void onChanged(@Nullable final List<UserInfo> infoList)
             {
-                if (userData.size() > 0)
+                if (infoList.size() > 0)
                 {
-                    textView.setText(userData.get(userData.size() - 1).toString());
-                } else
+                    textView.setText(infoList.get(infoList.size() - 1).toString());
+                }
+                else
                 {
                     textView.setText("List is empty!");
                 }
@@ -65,7 +66,8 @@ public class MainActivity extends AppCompatActivity
                 if (usersViewModel.toggle())
                 {
                     fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_pause));
-                } else
+                }
+                else
                 {
                     fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
                 }
