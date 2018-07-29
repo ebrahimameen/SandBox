@@ -22,7 +22,7 @@ public abstract class ArchComDatabase extends RoomDatabase
                 //INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ArchComDatabase.class, "archcomp_db").build();
                 if (INSTANCE == null)
                 {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ArchComDatabase.class, "archcomp_db").build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), ArchComDatabase.class, "archcomp_db.sqlite").build();
                 }
             }
         }

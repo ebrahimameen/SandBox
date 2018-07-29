@@ -18,7 +18,7 @@ public class UsersViewModel extends AndroidViewModel
     public UsersViewModel(@NonNull Application application)
     {
         super(application);
-        dataGenerator = new UserInfoGenerator();
+        dataGenerator = new UserInfoGenerator(application);
         new Thread(dataGenerator).start();
 
         allUsers = dataGenerator.getListUserInfo();
