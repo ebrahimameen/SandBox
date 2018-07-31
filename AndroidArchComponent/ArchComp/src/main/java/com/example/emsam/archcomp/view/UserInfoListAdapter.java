@@ -22,13 +22,11 @@ public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapte
     class UserViewHolder extends RecyclerView.ViewHolder
     {
         private final TextView tvName;
-        private final TextView tvEmail;
 
         private UserViewHolder(View itemView)
         {
             super(itemView);
-            tvName = itemView.findViewById(android.R.id.text1);
-            tvEmail = itemView.findViewById(android.R.id.text2);
+            tvName = itemView.findViewById(R.id.textView);
         }
 
     }
@@ -41,7 +39,7 @@ public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapte
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View itemView = mInflater.inflate(android.R.layout.simple_list_item_2, parent, false);
+        View itemView = mInflater.inflate(R.layout.userlist_item, parent, false);
         return new UserViewHolder(itemView);
     }
 
@@ -51,7 +49,6 @@ public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapte
     {
         UserInfo current = users.get(position);
         holder.tvName.setText(String.format(" %s\t (%d)", current.getName(), current.getAge()));
-        holder.tvEmail.setText(current.getEmail());
     }
     public void setUsers(List<UserInfo> users)
     {
