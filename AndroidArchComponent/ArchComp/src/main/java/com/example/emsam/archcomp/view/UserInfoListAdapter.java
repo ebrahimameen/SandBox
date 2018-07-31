@@ -16,32 +16,23 @@ import java.util.List;
 public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapter.UserViewHolder>
 {
 
-    private final LayoutInflater mInflater;
+    private final LayoutInflater layoutInflater;
     private List<UserInfo> users;
 
-    class UserViewHolder extends RecyclerView.ViewHolder
+    public void clear()
     {
-        private final TextView tvName;
-        private final TextView tvEmail;
-
-        private UserViewHolder(View itemView)
-        {
-            super(itemView);
-            tvName = itemView.findViewById(android.R.id.text1);
-            tvEmail = itemView.findViewById(android.R.id.text2);
-        }
-
+        users.clear();
     }
 
     UserInfoListAdapter(Context context)
     {
-        mInflater = LayoutInflater.from(context);
+        layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View itemView = mInflater.inflate(android.R.layout.simple_list_item_2, parent, false);
+        View itemView = layoutInflater.inflate(R.layout.user_cardview_item, parent, false);
         return new UserViewHolder(itemView);
     }
 
@@ -50,16 +41,17 @@ public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapte
     public void onBindViewHolder(UserViewHolder holder, int position)
     {
         UserInfo current = users.get(position);
-        holder.tvName.setText(String.format(" %s\t (%d)", current.getName(), current.getAge()));
+        holder.tvName.setText(String.format("%s\t (%d)", current.getName(), current.getAge()));
         holder.tvEmail.setText(current.getEmail());
     }
+
     public void setUsers(List<UserInfo> users)
     {
         this.users = users;
         notifyDataSetChanged();
     }
-
     // getItemCount() is called many times, and when it is first called,
+
     // mWords has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount()
@@ -71,6 +63,19 @@ public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapte
         else
         {
             return 0;
+        }
+    }
+
+    class UserViewHolder extends RecyclerView.ViewHolder
+    {
+        private final TextView tvName;
+        private final TextView tvEmail;
+
+        private UserViewHolder(View itemView)
+        {
+            super(itemView);
+            tvName = itemView.findViewById(R.id.tvName);
+            tvEmail = itemView.findViewById(R.id.tvEmail);
         }
     }
 }
