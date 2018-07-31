@@ -1,11 +1,13 @@
 package com.example.emsam.archcomp;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.example.emsam.archcomp.model.UserInfo;
+import com.example.emsam.archcomp.repository.DataRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +24,12 @@ public class UserInfoGenerator implements Runnable
     private final AtomicBoolean pauseFlag = new AtomicBoolean(true);
     private final Random random = new Random();
     private MutableLiveData<List<UserInfo>> liveData;
+    private DataRepository repository;
 
-    public UserInfoGenerator()
+    public UserInfoGenerator(Application application)
     {
         liveData = new MutableLiveData<>();
+        repository = new DataRepository(application);
     }
 
     @SuppressLint("DefaultLocale")
@@ -48,6 +52,7 @@ public class UserInfoGenerator implements Runnable
                 int age = random.nextInt(MAX - MIN) + MIN;
                 UserInfo user = new UserInfo(String.format("User Element_%d", (++counter)), age);
                 userInfos.add(user);
+                repository.insertUser(user);
                 liveData.postValue(userInfos);
                 Thread.sleep(2500);
             }

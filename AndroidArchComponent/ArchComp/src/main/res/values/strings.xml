@@ -1,6 +1,4 @@
 <resources>
     <string name="app_name">ArchComp</string>
     <string name="action_settings">Settings</string>
-    <string name="test">Test</string>
-    <string name="button">Button</string>
 </resources>

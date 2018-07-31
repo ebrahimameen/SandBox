@@ -22,7 +22,7 @@ public interface UserInfoDao
     @Query("DELETE FROM user_table")
     void deleteAllUsers();
 
-    @Query("SELECT * FROM user_table ORDER BY id ASC")
+    @Query("SELECT * FROM user_table ORDER BY name ASC")
     LiveData<List<UserInfo>> getAllUsers();
 
     @Query("SELECT * FROM user_table WHERE age BETWEEN :min AND:max")
