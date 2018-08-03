@@ -6,29 +6,44 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.OnLifecycleEvent;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.emsam.archcomp.model.UserInfo;
 import com.example.emsam.archcomp.repository.DataRepository;
 
 
-public class UserInfoGenerator implements Runnable
+public class UserInfoGenerator implements Runnable, LifecycleObserver
 {
     private static final String TAG = "Gen";
     private static final int MIN = 20;
     private static final int MAX = 80;
     private static int counter;
+
+    // flag for pause/resume only if enabled
     private final AtomicBoolean pauseFlag = new AtomicBoolean(true);
+
+    // flag to enable/disable data generation
+    private final AtomicBoolean isEnabled = new AtomicBoolean(false);
+
+    // by default the thread keeps alive until force terminate is triggered.
+    private final AtomicBoolean forceTerminate = new AtomicBoolean(false);
+
     private final Random random = new Random();
     private MutableLiveData<List<UserInfo>> liveData;
     private DataRepository repository;
-    private AtomicBoolean isEnabled = new AtomicBoolean(false);
+    private Lifecycle lifecycle;
 
-    public UserInfoGenerator(DataRepository repository)
+    public UserInfoGenerator(DataRepository repository, @Nullable Lifecycle lifecycle)
     {
         this.repository = repository;
+        setLifecycle(lifecycle);
+
         liveData = new MutableLiveData<>();
     }
 
@@ -37,7 +52,7 @@ public class UserInfoGenerator implements Runnable
     public void run()
     {
         final List<UserInfo> userInfos = new ArrayList<>();
-        while (!Thread.currentThread().isInterrupted())
+        while (!forceTerminate.get())
         {
             try
             {
@@ -47,8 +62,10 @@ public class UserInfoGenerator implements Runnable
                     {
                         Log.d(TAG, "run: Paused");
                         pauseFlag.wait();
+
                     }
                 }
+
                 int age = random.nextInt(MAX - MIN) + MIN;
                 UserInfo user = new UserInfo(String.format("User Element_%d", (++counter)), age);
                 userInfos.add(user);
@@ -86,8 +103,8 @@ public class UserInfoGenerator implements Runnable
             pauseFlag.set(false);
             synchronized (pauseFlag)
             {
+                Log.d(TAG, "resume(): invoke resume!");
                 pauseFlag.notify();
-                Log.d(TAG, "resume(): Resumed!");
             }
         }
         else
@@ -115,4 +132,34 @@ public class UserInfoGenerator implements Runnable
     {
         return isEnabled.get();
     }
+
+    // region Lifecycle
+    public void setLifecycle(@Nullable Lifecycle lifecycle)
+    {
+        this.lifecycle = lifecycle;
+        if (lifecycle != null)
+        {
+            lifecycle.addObserver(this);
+        }
+    }
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE) void onLifecyclePause()
+    {
+        pause();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) void onLifecycleResume()
+    {
+        resume();
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY) void cleanup()
+    {
+        if (lifecycle != null)
+        {
+            lifecycle.removeObserver(this);
+        }
+
+        forceTerminate.set(true);
+    }
+    // endregion
 }

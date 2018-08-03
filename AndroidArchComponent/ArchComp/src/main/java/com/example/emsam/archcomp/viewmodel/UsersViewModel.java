@@ -7,7 +7,6 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.OnLifecycleEvent;
 import android.support.annotation.NonNull;
 
 import com.example.emsam.archcomp.UserInfoGenerator;
@@ -19,26 +18,34 @@ public class UsersViewModel extends AndroidViewModel implements LifecycleObserve
 
     private LiveData<List<UserInfo>> allUsers;
     private DataRepository dataRepository;
-    private Lifecycle lifecycle;
 
     // TODO: 03.08.18 CLEANING UP.
     // ######################################################################
     // Data generation should be part of the repo implementation in order to exclude the ViewModel implementation
     // from the content fetching.
     private UserInfoGenerator dataGenerator;
-    private Thread dataGeneratorThread;
     // ######################################################################
 
     public UsersViewModel(@NonNull Application application)
     {
         super(application);
         dataRepository = new DataRepository(application);
-        dataGenerator = new UserInfoGenerator(dataRepository);
-        dataGeneratorThread = new Thread(dataGenerator);
-        dataGeneratorThread.start();
+        dataGenerator = new UserInfoGenerator(dataRepository, null);
+        new Thread(dataGenerator).start();
 
-//        allUsers = dataRepository.getAllUsers(); //dataGenerator.getListUserInfo();
-        allUsers = dataRepository.getUsersInRangeOf(20,30); //dataGenerator.getListUserInfo();
+        //        allUsers = dataRepository.getAllUsers(); //dataGenerator.getListUserInfo();
+        allUsers = dataRepository.getUsersInRangeOf(20, 30); //dataGenerator.getListUserInfo();
+    }
+
+    /**
+     * TODO:03.08.18: can be added to the constructor.
+     *
+     * @param lifecycle
+     *         lifecycle awareness.
+     */
+    public void setLifecycle(final Lifecycle lifecycle)
+    {
+        dataGenerator.setLifecycle(lifecycle);
     }
 
     public LiveData<List<UserInfo>> getUsers()
@@ -80,34 +87,5 @@ public class UsersViewModel extends AndroidViewModel implements LifecycleObserve
             stop();
         }
         return !dataGenerator.isPaused();
-    }
-
-    public void setLifecycle(final Lifecycle lifecycle)
-    {
-        this.lifecycle = lifecycle;
-       lifecycle.addObserver(this);
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE) void onLifecyclePause()
-    {
-        dataGenerator.pause();
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) void onLifecycleResume()
-    {
-        dataGenerator.resume();
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY) void cleanup()
-    {
-        if (lifecycle != null)
-        {
-            lifecycle.removeObserver(this);
-        }
-
-        if (dataGeneratorThread != null)
-        {
-            dataGeneratorThread.interrupt();
-        }
     }
 }

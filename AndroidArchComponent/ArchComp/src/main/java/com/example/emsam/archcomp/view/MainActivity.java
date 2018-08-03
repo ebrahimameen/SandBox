@@ -67,16 +67,18 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view)
             {
 
-//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com/search?q=postman"));
-//                startActivity(intent);
+                //                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com/search?q=postman"));
+                //                startActivity(intent);
 
                 if (usersViewModel.toggle())
                 {
-                    fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_pause));
+                    fab.setImageDrawable(
+                            ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_pause));
                 }
                 else
                 {
-                    fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
+                    fab.setImageDrawable(
+                            ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
                 }
             }
         });
