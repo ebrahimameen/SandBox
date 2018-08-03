@@ -1,5 +1,7 @@
 package com.example.emsam.archcomp.view;
 
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +22,6 @@ import android.widget.Toast;
 import com.example.emsam.archcomp.R;
 import com.example.emsam.archcomp.model.UserInfo;
 import com.example.emsam.archcomp.viewmodel.UsersViewModel;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         usersViewModel = ViewModelProviders.of(this).get(UsersViewModel.class);
+        usersViewModel.setLifecycle(getLifecycle());
         usersViewModel.getUsers().observe(this, new Observer<List<UserInfo>>()
         {
             @SuppressLint("SetTextI18n")
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity
             {
                 if (infoList != null && infoList.size() > 0)
                 {
+                    Log.e("GEN", "onChanged: new update: " + infoList.size());
                     adapter.setUsers(infoList);
                 }
                 else
@@ -102,5 +105,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+
+        Log.e("Gen", "MainActivity/onDestroy()");
     }
 }

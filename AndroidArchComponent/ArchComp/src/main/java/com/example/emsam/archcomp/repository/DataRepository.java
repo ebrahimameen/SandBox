@@ -1,16 +1,14 @@
 package com.example.emsam.archcomp.repository;
 
+import java.util.List;
+
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.example.emsam.archcomp.ArchComDatabase;
 import com.example.emsam.archcomp.dao.UserInfoDao;
 import com.example.emsam.archcomp.model.UserInfo;
-
-import java.util.List;
 
 public class DataRepository
 {
