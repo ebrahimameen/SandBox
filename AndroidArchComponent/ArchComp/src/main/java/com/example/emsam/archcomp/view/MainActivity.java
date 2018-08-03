@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final UserInfoListAdapter adapter = new UserInfoListAdapter(this);
+        final UserInfoListAdapter adapter = new UserInfoListAdapter();
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
                 if (infoList != null && infoList.size() > 0)
                 {
                     Log.e("GEN", "onChanged: new update: " + infoList.size());
-                    adapter.setUsers(infoList);
+                    adapter.submitList(infoList);
                 }
                 else
                 {

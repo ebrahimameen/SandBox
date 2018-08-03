@@ -1,8 +1,10 @@
 package com.example.emsam.archcomp.view;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.arch.paging.PagedListAdapter;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,28 +13,34 @@ import android.widget.TextView;
 import com.example.emsam.archcomp.R;
 import com.example.emsam.archcomp.model.UserInfo;
 
-import java.util.List;
-
-public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapter.UserViewHolder>
+public class UserInfoListAdapter extends PagedListAdapter<UserInfo, UserInfoListAdapter.UserViewHolder>
 {
 
-    private final LayoutInflater layoutInflater;
-    private List<UserInfo> users;
-
-    public void clear()
+    private static final DiffUtil.ItemCallback<UserInfo> ITEM_CALLBACK = new DiffUtil.ItemCallback<UserInfo>()
     {
-        users.clear();
-    }
+        @Override
+        public boolean areItemsTheSame(final UserInfo oldItem, final UserInfo newItem)
+        {
+            return oldItem.id == newItem.id;
+        }
 
-    UserInfoListAdapter(Context context)
+        @Override
+        public boolean areContentsTheSame(final UserInfo oldItem, final UserInfo newItem)
+        {
+            return oldItem.equals(newItem);
+        }
+    };
+
+    public UserInfoListAdapter()
     {
-        layoutInflater = LayoutInflater.from(context);
+        super(ITEM_CALLBACK);
     }
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View itemView = layoutInflater.inflate(R.layout.user_cardview_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.user_cardview_item, parent, false);
         return new UserViewHolder(itemView);
     }
 
@@ -40,29 +48,15 @@ public class UserInfoListAdapter extends RecyclerView.Adapter<UserInfoListAdapte
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position)
     {
-        UserInfo current = users.get(position);
-        holder.tvName.setText(String.format("%s\t (%d)", current.getName(), current.getAge()));
-        holder.tvEmail.setText(current.getEmail());
-    }
-
-    public void setUsers(List<UserInfo> users)
-    {
-        this.users = users;
-        notifyDataSetChanged();
-    }
-    // getItemCount() is called many times, and when it is first called,
-
-    // mWords has not been updated (means initially, it's null, and we can't return null).
-    @Override
-    public int getItemCount()
-    {
-        if (users != null)
+        UserInfo current = getItem(position);
+        if (current != null)
         {
-            return users.size();
+            holder.tvName.setText(String.format("%d- %s\t (%d)", position, current.getName(), current.getAge()));
+            holder.tvEmail.setText(current.getEmail());
         }
         else
         {
-            return 0;
+            Log.i("UserInfo", "onBindViewHolder: user is null: " + position);
         }
     }
 

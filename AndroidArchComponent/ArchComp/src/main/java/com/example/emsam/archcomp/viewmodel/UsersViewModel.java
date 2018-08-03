@@ -1,12 +1,13 @@
 package com.example.emsam.archcomp.viewmodel;
 
-import java.util.List;
-
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LiveData;
+import android.arch.paging.DataSource;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
 import android.support.annotation.NonNull;
 
 import com.example.emsam.archcomp.UserInfoGenerator;
@@ -16,7 +17,7 @@ import com.example.emsam.archcomp.repository.DataRepository;
 public class UsersViewModel extends AndroidViewModel implements LifecycleObserver
 {
 
-    private LiveData<List<UserInfo>> allUsers;
+    private LiveData<PagedList<UserInfo>> allUsers;
     private DataRepository dataRepository;
 
     // TODO: 03.08.18 CLEANING UP.
@@ -33,8 +34,22 @@ public class UsersViewModel extends AndroidViewModel implements LifecycleObserve
         dataGenerator = new UserInfoGenerator(dataRepository, null);
         new Thread(dataGenerator).start();
 
-        //        allUsers = dataRepository.getAllUsers(); //dataGenerator.getListUserInfo();
-        allUsers = dataRepository.getUsersInRangeOf(20, 30); //dataGenerator.getListUserInfo();
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setPageSize(20)
+                .setInitialLoadSizeHint(60)
+                .setPrefetchDistance(10)
+                .setEnablePlaceholders(true)
+                .build();
+
+        if (allUsers == null)
+        {
+            DataSource.Factory factory = dataRepository.getAllUsers();
+            // TODO: 03.08.18 Important to convert PagedList to LiveData
+            allUsers = new LivePagedListBuilder<Integer, UserInfo>(factory, config).build();
+        }
+
+        // allUsers = dataRepository.getAllUsers(); //dataGenerator.getListUserInfo();
+        //        allUsers = dataRepository.getUsersInRangeOf(20, 30); //dataGenerator.getListUserInfo();
     }
 
     /**
@@ -48,7 +63,7 @@ public class UsersViewModel extends AndroidViewModel implements LifecycleObserve
         dataGenerator.setLifecycle(lifecycle);
     }
 
-    public LiveData<List<UserInfo>> getUsers()
+    public LiveData<PagedList<UserInfo>> getUsers()
     {
         return allUsers;
     }

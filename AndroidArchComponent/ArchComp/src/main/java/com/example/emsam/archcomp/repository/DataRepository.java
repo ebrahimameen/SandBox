@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.paging.DataSource;
 import android.os.AsyncTask;
 
 import com.example.emsam.archcomp.ArchComDatabase;
@@ -14,8 +15,6 @@ public class DataRepository
 {
     private static final String TAG = "Repo";
     private UserInfoDao userDao;
-    private List<Class<?>> models;
-    private LiveData<List<UserInfo>> allUsers;
     private LiveData<List<UserInfo>> usersInRange;
 
 
@@ -23,12 +22,11 @@ public class DataRepository
     {
         ArchComDatabase database = ArchComDatabase.getDatabase(application);
         userDao = database.getUserDao();
-        allUsers = userDao.getAllUsers();
     }
 
-    public LiveData<List<UserInfo>> getAllUsers()
+    public DataSource.Factory<Integer, UserInfo> getAllUsers()
     {
-        return allUsers;
+       return userDao.getAllUsers();
     }
 
     public LiveData<List<UserInfo>> getUsersInRangeOf(int min, int max)
