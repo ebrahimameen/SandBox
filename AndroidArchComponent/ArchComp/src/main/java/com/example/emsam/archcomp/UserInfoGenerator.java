@@ -113,6 +113,7 @@ public class UserInfoGenerator implements Runnable, LifecycleObserver
         }
     }
 
+    @SuppressWarnings("unused")
     public LiveData<List<UserInfo>> getListUserInfo()
     {
         return liveData;
@@ -142,17 +143,21 @@ public class UserInfoGenerator implements Runnable, LifecycleObserver
             lifecycle.addObserver(this);
         }
     }
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE) void onLifecyclePause()
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    void onLifecyclePause()
     {
         pause();
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) void onLifecycleResume()
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    void onLifecycleResume()
     {
         resume();
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY) void cleanup()
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    void cleanup()
     {
         if (lifecycle != null)
         {

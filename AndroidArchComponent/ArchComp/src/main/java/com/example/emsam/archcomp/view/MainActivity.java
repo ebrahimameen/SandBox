@@ -1,12 +1,7 @@
 package com.example.emsam.archcomp.view;
 
-import java.util.List;
-
-import android.annotation.SuppressLint;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.emsam.archcomp.R;
-import com.example.emsam.archcomp.model.UserInfo;
 import com.example.emsam.archcomp.viewmodel.UsersViewModel;
 
 public class MainActivity extends AppCompatActivity
@@ -42,12 +35,7 @@ public class MainActivity extends AppCompatActivity
 
         usersViewModel = ViewModelProviders.of(this).get(UsersViewModel.class);
         usersViewModel.setLifecycle(getLifecycle());
-        usersViewModel.getUsers().observe(this, new Observer<List<UserInfo>>()
-        {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onChanged(@Nullable final List<UserInfo> infoList)
-            {
+        usersViewModel.getUsers().observe(this, infoList -> {
                 if (infoList != null && infoList.size() > 0)
                 {
                     Log.e("GEN", "onChanged: new update: " + infoList.size());
@@ -57,29 +45,23 @@ public class MainActivity extends AppCompatActivity
                 {
                     Toast.makeText(MainActivity.this, "List is empty!", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
+            });
 
         final FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
+        fab.setOnClickListener(view -> {
+
+            //                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com/search?q=postman"));
+            //                startActivity(intent);
+
+            if (usersViewModel.toggle())
             {
-
-                //                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com/search?q=postman"));
-                //                startActivity(intent);
-
-                if (usersViewModel.toggle())
-                {
-                    fab.setImageDrawable(
-                            ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_pause));
-                }
-                else
-                {
-                    fab.setImageDrawable(
-                            ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
-                }
+                fab.setImageDrawable(
+                        ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_pause));
+            }
+            else
+            {
+                fab.setImageDrawable(
+                        ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
             }
         });
     }
@@ -113,7 +95,6 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         super.onDestroy();
-
         Log.e("Gen", "MainActivity/onDestroy()");
     }
 }

@@ -41,7 +41,7 @@ public class DataRepository
         return usersInRange;
     }
 
-    public void insertUser(UserInfo userInfo)
+    public void insertUser(UserInfo... userInfo)
     {
         new InsertUserTask(userDao).execute(userInfo);
     }
@@ -67,7 +67,7 @@ public class DataRepository
         @Override
         protected Void doInBackground(final UserInfo... params)
         {
-            localUserDao.insertUser(params[0]);
+            localUserDao.insertUser(params);
             return null;
         }
 
@@ -86,7 +86,7 @@ public class DataRepository
         @Override
         protected Void doInBackground(final UserInfo... params)
         {
-            localUserDao.deleteUser(params[0]);
+            localUserDao.deleteUser(params);
             return null;
         }
     }

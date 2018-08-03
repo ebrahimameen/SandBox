@@ -88,4 +88,10 @@ public class UsersViewModel extends AndroidViewModel implements LifecycleObserve
         }
         return !dataGenerator.isPaused();
     }
+
+    @Override
+    protected void onCleared()
+    {
+        super.onCleared();
+    }
 }

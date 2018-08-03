@@ -1,5 +1,7 @@
 package com.example.emsam.archcomp.dao;
 
+import java.util.List;
+
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -8,16 +10,14 @@ import android.arch.persistence.room.Query;
 
 import com.example.emsam.archcomp.model.UserInfo;
 
-import java.util.List;
-
 @Dao
 public interface UserInfoDao
 {
     @Insert
-    void insertUser(UserInfo userInfo);
+    void insertUser(UserInfo... users);
 
     @Delete
-    void deleteUser(UserInfo userInfo);
+    void deleteUser(UserInfo... users);
 
     @Query("DELETE FROM user_table")
     void deleteAllUsers();
