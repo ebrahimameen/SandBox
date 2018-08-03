@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.example.emsam.archcomp.model.UserInfo;
+import com.example.emsam.archcomp.repository.DataRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +17,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class UserInfoGenerator implements Runnable
 {
     private static final String TAG = "Gen";
-    private static final int MIN = 18;
-    private static final int MAX = 80;
+    private static final int MIN = 69;
+    private static final int MAX = 72;
     private static int counter;
     private final AtomicBoolean pauseFlag = new AtomicBoolean(true);
     private final Random random = new Random();
     private MutableLiveData<List<UserInfo>> liveData;
+    private DataRepository repository;
 
-    public UserInfoGenerator()
+    public UserInfoGenerator(DataRepository repository)
     {
+        this.repository = repository;
         liveData = new MutableLiveData<>();
     }
 
@@ -48,7 +51,9 @@ public class UserInfoGenerator implements Runnable
                 int age = random.nextInt(MAX - MIN) + MIN;
                 UserInfo user = new UserInfo(String.format("User Element_%d", (++counter)), age);
                 userInfos.add(user);
+                repository.insertUser(user);
                 liveData.postValue(userInfos);
+                Log.d(TAG, "run: " + user);
                 Thread.sleep(2500);
             }
             catch (InterruptedException e)

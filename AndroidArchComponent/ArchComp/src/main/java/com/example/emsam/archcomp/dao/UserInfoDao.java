@@ -28,5 +28,6 @@ public interface UserInfoDao
     @Query("SELECT * FROM user_table WHERE age BETWEEN :min AND:max")
     LiveData<List<UserInfo>> getUsersInRangeOf(int min, int max);
 
-
+    @Query("SELECT * FROM user_table ORDER BY id ASC LIMIT:offset, :len")
+    LiveData<List<UserInfo>> getUsers(int offset, int len);
 }

@@ -20,11 +20,12 @@ public class UsersViewModel extends AndroidViewModel
     public UsersViewModel(@NonNull Application application)
     {
         super(application);
-        dataGenerator = new UserInfoGenerator();
+        dataRepository = new DataRepository(application);
+        dataGenerator = new UserInfoGenerator(dataRepository);
         new Thread(dataGenerator).start();
 
-        dataRepository = new DataRepository(application);
-        allUsers = dataRepository.getAllUsers(); //dataGenerator.getListUserInfo();
+//        allUsers = dataRepository.getAllUsers(); //dataGenerator.getListUserInfo();
+        allUsers = dataRepository.getUsersInRangeOf(70,70); //dataGenerator.getListUserInfo();
     }
 
     public LiveData<List<UserInfo>> getUsers()

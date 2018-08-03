@@ -2,6 +2,7 @@ package com.example.emsam.archcomp.repository;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,9 +14,12 @@ import java.util.List;
 
 public class DataRepository
 {
+    private static final String TAG = "Repo";
     private UserInfoDao userDao;
     private List<Class<?>> models;
     private LiveData<List<UserInfo>> allUsers;
+    private LiveData<List<UserInfo>> usersInRange;
+
 
     public DataRepository(Application application)
     {
@@ -27,6 +31,16 @@ public class DataRepository
     public LiveData<List<UserInfo>> getAllUsers()
     {
         return allUsers;
+    }
+
+    public LiveData<List<UserInfo>> getUsersInRangeOf(int min, int max)
+    {
+        if (usersInRange == null)
+        {
+            usersInRange = userDao.getUsersInRangeOf(min, max);
+        }
+
+        return usersInRange;
     }
 
     public void insertUser(UserInfo userInfo)
@@ -43,13 +57,6 @@ public class DataRepository
     {
         new DeleteAllUserTask(userDao).execute();
     }
-
-    public LiveData<List<UserInfo>> getUsersInRangeOf(int min, int max)
-    {
-        // TODO: 7/29/2018  
-        return null; //new FetchUserInRangeTask(userDao).execute(Integer.valueOf(min) ,Integer.valueOf(max));
-    }
-
     private static class InsertUserTask extends AsyncTask<UserInfo, Void, Void>
     {
 
@@ -59,34 +66,13 @@ public class DataRepository
         {
             localUserDao = dao;
         }
-
         @Override
         protected Void doInBackground(final UserInfo... params)
         {
             localUserDao.insertUser(params[0]);
             return null;
         }
-    }
 
-    private static class FetchUserInRangeTask extends AsyncTask<Integer, Void,  LiveData<List<UserInfo>>>
-    {
-        private static final String TAG = "FetchUserInRangeTask";
-        private UserInfoDao localUserDao;
-
-        FetchUserInRangeTask(UserInfoDao dao)
-        {
-            localUserDao = dao;
-        }
-
-        @Override
-        protected LiveData<List<UserInfo>> doInBackground(Integer... age)
-        {
-            if (age.length < 2 || age.length > 2)
-            {
-                Log.e(TAG, "doInBackground: invalid range: " + age.length );
-            }
-            return localUserDao.getUsersInRangeOf(age[0], age[1]);
-        }
     }
 
     private static class DeleteUserTask extends AsyncTask<UserInfo, Void, Void>

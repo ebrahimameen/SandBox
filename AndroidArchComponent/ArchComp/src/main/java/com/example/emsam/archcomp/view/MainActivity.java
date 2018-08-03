@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable final List<UserInfo> infoList)
             {
-                if (infoList.size() > 0)
+                if (infoList != null && infoList.size() > 0)
                 {
                     adapter.setUsers(infoList);
                 }
