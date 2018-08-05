@@ -1,1 +1,1 @@
-include ':ArchComp', ':fbgo'
+include ':ArchComp'
