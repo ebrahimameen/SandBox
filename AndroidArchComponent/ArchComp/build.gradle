@@ -88,7 +88,7 @@ dependencies {
     testImplementation "android.arch.paging:common:$paging_version"
 
     // optional - RxJava support, currently in release candidate
-    implementation "android.arch.paging:rxjava2:1.0.0-rc1"
+    implementation "android.arch.paging:rxjava2:1.0.1"
 }
 
 dependencies {
@@ -108,4 +108,11 @@ dependencies {
 
     // optional - Test helpers
     androidTestImplementation "android.arch.work:work-testing:$work_version"
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+dependencies {
+	implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-database:16.0.1'
 }

@@ -1,7 +1,5 @@
 package com.example.emsam.archcomp.repository;
 
-import java.util.List;
-
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
@@ -10,6 +8,10 @@ import android.os.AsyncTask;
 import com.example.emsam.archcomp.ArchComDatabase;
 import com.example.emsam.archcomp.dao.UserInfoDao;
 import com.example.emsam.archcomp.model.UserInfo;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
 
 public class DataRepository
 {
@@ -17,16 +19,18 @@ public class DataRepository
     private UserInfoDao userDao;
     private LiveData<List<UserInfo>> usersInRange;
 
+    private static DatabaseReference fbDatabaseReference;
 
     public DataRepository(Application application)
     {
         ArchComDatabase database = ArchComDatabase.getDatabase(application);
         userDao = database.getUserDao();
+        fbDatabaseReference = FirebaseDatabase.getInstance().getReference("user_table");
     }
 
     public DataSource.Factory<Integer, UserInfo> getAllUsers()
     {
-       return userDao.getAllUsers();
+        return userDao.getAllUsers();
     }
 
     public LiveData<List<UserInfo>> getUsersInRangeOf(int min, int max)
@@ -53,6 +57,7 @@ public class DataRepository
     {
         new DeleteAllUserTask(userDao).execute();
     }
+
     private static class InsertUserTask extends AsyncTask<UserInfo, Void, Void>
     {
 
@@ -62,10 +67,23 @@ public class DataRepository
         {
             localUserDao = dao;
         }
+
         @Override
-        protected Void doInBackground(final UserInfo... params)
+        protected Void doInBackground(final UserInfo... userInfo)
         {
-            localUserDao.insertUser(params);
+            final long[] ids = localUserDao.insertUser(userInfo);
+            for (int i = 0; i < userInfo.length; i++)
+            {
+                UserInfo user = userInfo[i];
+                user.setId(ids[i]);
+
+                // generate firebase id
+                final String id = fbDatabaseReference.push().getKey();
+                if (id != null)
+                {
+                    fbDatabaseReference.child(id).setValue(user);
+                }
+            }
             return null;
         }
 

@@ -51,7 +51,7 @@ public class UserInfoListAdapter extends PagedListAdapter<UserInfo, UserInfoList
         UserInfo current = getItem(position);
         if (current != null)
         {
-            holder.tvName.setText(String.format("%d- %s\t (%d)", position, current.getName(), current.getAge()));
+            holder.tvName.setText(String.format("%d- %s\t (%d)", current.id, current.getName(), current.getAge()));
             holder.tvEmail.setText(current.getEmail());
         }
         else

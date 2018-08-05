@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 public class UserInfo
 {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public long id;
 
     @NonNull
     private String name;
@@ -52,6 +52,16 @@ public class UserInfo
     public void setEmail(@NonNull String email)
     {
         this.email = email;
+    }
+
+    public long getId()
+    {
+        return id;
+    }
+
+    public void setId(long id)
+    {
+        this.id = id;
     }
 
     @SuppressLint("DefaultLocale")

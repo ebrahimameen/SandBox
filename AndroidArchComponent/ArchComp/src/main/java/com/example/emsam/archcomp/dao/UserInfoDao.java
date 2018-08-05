@@ -15,7 +15,7 @@ import com.example.emsam.archcomp.model.UserInfo;
 public interface UserInfoDao
 {
     @Insert
-    void insertUser(UserInfo... users);
+    long[] insertUser(UserInfo... users);
 
     @Delete
     void deleteUser(UserInfo... users);
