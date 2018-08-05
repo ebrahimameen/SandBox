@@ -1,2 +1,5 @@
 
 *.ser
+AndroidArchComponent/fbgo/release/output.json
+AndroidArchComponent/fbgo/google-services.json
+*.apk
