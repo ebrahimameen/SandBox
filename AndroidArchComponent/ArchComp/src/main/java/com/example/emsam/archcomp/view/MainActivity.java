@@ -2,6 +2,7 @@ package com.example.emsam.archcomp.view;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,19 @@ import android.widget.Toast;
 
 import com.example.emsam.archcomp.R;
 import com.example.emsam.archcomp.viewmodel.UsersViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class MainActivity extends AppCompatActivity
 {
+
+    private static final String TAG = "MainActivity";
     private UsersViewModel usersViewModel;
+    private GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -64,6 +74,33 @@ public class MainActivity extends AppCompatActivity
                         ContextCompat.getDrawable(MainActivity.this, android.R.drawable.ic_media_play));
             }
         });
+
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        startActivity(googleSignInClient.getSignInIntent());
+    }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        // Check for existing Google Sign In account, if the user is already signed in the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null)
+        {
+            Log.d(TAG, "onStart: " + account.getDisplayName());
+        }
+        else
+        {
+            Log.e(TAG, "onStart: Not signed in!");
+        }
     }
 
     @Override

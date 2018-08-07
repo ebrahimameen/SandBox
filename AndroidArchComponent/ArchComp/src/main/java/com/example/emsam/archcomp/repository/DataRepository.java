@@ -4,14 +4,23 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.emsam.archcomp.ArchComDatabase;
 import com.example.emsam.archcomp.dao.UserInfoDao;
 import com.example.emsam.archcomp.model.UserInfo;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataRepository
 {
@@ -26,6 +35,35 @@ public class DataRepository
         ArchComDatabase database = ArchComDatabase.getDatabase(application);
         userDao = database.getUserDao();
         fbDatabaseReference = FirebaseDatabase.getInstance().getReference("user_table");
+        fbDatabaseReference.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+
+                for (DataSnapshot child :dataSnapshot.getChildren())
+                {
+                    long id = Long.valueOf(child.child("id").getValue().toString());
+                    String name = child.child("name").getValue().toString();
+                    String email = child.child("email").getValue().toString();
+                    int age = Integer.valueOf(child.child("age").getValue().toString());
+                    UserInfo userInfo = new UserInfo.Builder()
+                            .setId(id)
+                            .setName(name)
+                            .setEmail(email)
+                            .setAge(age)
+                            .build();
+
+                    Log.d(TAG, "onDataChange: " + userInfo.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+                Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+            }
+        });
     }
 
     public DataSource.Factory<Integer, UserInfo> getAllUsers()
