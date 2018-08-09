@@ -34,6 +34,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
 
     private GoogleSignInClient googleSignInClient;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -105,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Build a GoogleSignInClient with the options specified by gso.
         googleSignInClient = GoogleSignIn.getClient(this, gso);
+        firebaseAuth = FirebaseAuth.getInstance();
 
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.google_sign_in_button);
@@ -190,8 +196,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             Log.e(TAG, "onActivityResult: " + task.getResult().getDisplayName());
-            handelOnUserSigningOk();
+            onGoogleSignedIn(task.getResult());
+            //handelOnUserSigningOk();
         }
+    }
+
+    private void onGoogleSignedIn(GoogleSignInAccount account)
+    {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful())
+            {
+                // Sign in success, update UI with the signed-in user's information
+                Log.d(TAG, "signInWithCredential:success");
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                handelOnUserSigningOk();
+            }
+            else
+            {
+                // If sign in fails, display a message to the user.
+                Log.w(TAG, "signInWithCredential:failure", task.getException());
+            }
+        });
     }
 
     /**
