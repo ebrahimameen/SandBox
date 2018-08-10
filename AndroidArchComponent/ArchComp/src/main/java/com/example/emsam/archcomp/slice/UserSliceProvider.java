@@ -1,4 +1,4 @@
-package com.example.emsam.archcomp;
+package com.example.emsam.archcomp.slice;
 
 import android.app.PendingIntent;
 import android.content.ContentResolver;

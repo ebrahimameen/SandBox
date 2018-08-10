@@ -1,4 +1,4 @@
-package com.example.emsam.archcomp;
+package com.example.emsam.archcomp.slice;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

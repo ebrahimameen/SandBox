@@ -24,13 +24,13 @@
         </activity>
 
         <provider
-            android:name=".UserSliceProvider"
+            android:name=".slice.UserSliceProvider"
             android:authorities="com.example.emsam.archcomp"
             android:grantUriPermissions="true"
             android:exported="true" />
 
         <receiver
-            android:name=".UserSliceBroadcastMonitor"
+            android:name=".slice.UserSliceBroadcastMonitor"
             android:enabled="true"
             android:exported="true" />
     </application>

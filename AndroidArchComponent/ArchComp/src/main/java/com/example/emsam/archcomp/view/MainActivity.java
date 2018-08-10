@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.emsam.archcomp.R;
 import com.example.emsam.archcomp.model.UserInfo;
-import com.example.emsam.archcomp.UserSliceProvider;
+import com.example.emsam.archcomp.slice.UserSliceProvider;
 import com.example.emsam.archcomp.viewmodel.UsersViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
