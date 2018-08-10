@@ -1,21 +1,22 @@
 package com.example.emsam.archcomp;
 
+import android.annotation.SuppressLint;
+import android.util.Log;
+
+import com.example.emsam.archcomp.model.UserInfo;
+import com.example.emsam.archcomp.repository.DataRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.annotation.SuppressLint;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.OnLifecycleEvent;
-import android.support.annotation.Nullable;
-import android.util.Log;
-
-import com.example.emsam.archcomp.model.UserInfo;
-import com.example.emsam.archcomp.repository.DataRepository;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.OnLifecycleEvent;
 
 
 public class UserInfoGenerator implements Runnable, LifecycleObserver

@@ -1,6 +1,6 @@
 package com.example.emsam.archcomp.livedata;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 /**
  * TODO: Class Description

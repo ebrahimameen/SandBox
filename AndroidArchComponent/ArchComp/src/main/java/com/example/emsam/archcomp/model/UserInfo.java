@@ -1,9 +1,10 @@
 package com.example.emsam.archcomp.model;
 
 import android.annotation.SuppressLint;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 @Entity(tableName = "user_table")
 public class UserInfo
@@ -89,16 +90,19 @@ public class UserInfo
             user.setId(id);
             return this;
         }
+
         public Builder setName(String name)
         {
             user.setName(name);
             return this;
         }
+
         public Builder setEmail(String email)
         {
             user.setEmail(email);
             return this;
         }
+
         public Builder setAge(int age)
         {
             user.setAge(age);

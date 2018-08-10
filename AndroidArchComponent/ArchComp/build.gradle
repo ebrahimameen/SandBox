@@ -10,20 +10,20 @@ android {
             storePassword 'android'
         }
     }
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.emsam.archcomp"
         minSdkVersion 24
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+
     }
     buildTypes {
         debug {
@@ -45,13 +45,11 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:cardview-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'androidx.appcompat:appcompat:1.0.0-rc01'
+    implementation 'androidx.cardview:cardview:1.0.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'com.google.android.material:material:1.0.0-rc01'
     implementation 'com.google.code.gson:gson:2.8.5'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
 dependencies {
@@ -104,25 +102,6 @@ dependencies {
     implementation "android.arch.paging:rxjava2:1.0.1"
 }
 
-dependencies {
-    implementation "android.arch.navigation:navigation-fragment:$nav_version" // use -ktx for Kotlin
-    implementation "android.arch.navigation:navigation-ui:$nav_version" // use -ktx for Kotlin
-
-    // optional - Test helpers
-    androidTestImplementation "android.arch.navigation:navigation-testing:$nav_version"
-    // use -ktx for Kotlin
-}
-
-dependencies {
-    implementation "android.arch.work:work-runtime:$work_version" // use -ktx for Kotlin
-
-    // optional - Firebase JobDispatcher support
-    implementation "android.arch.work:work-firebase:$work_version"
-
-    // optional - Test helpers
-    androidTestImplementation "android.arch.work:work-testing:$work_version"
-}
-
 apply plugin: 'com.google.gms.google-services'
 
 dependencies {
@@ -134,4 +113,12 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-messaging:17.1.0'
 
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.0.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
+    implementation 'androidx.slice:slice-core:1.0.0-rc01'
+    implementation 'androidx.slice:slice-builders:1.0.0-rc01'
 }

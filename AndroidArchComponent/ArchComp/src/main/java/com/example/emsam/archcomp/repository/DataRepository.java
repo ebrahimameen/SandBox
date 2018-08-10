@@ -1,10 +1,7 @@
 package com.example.emsam.archcomp.repository;
 
 import android.app.Application;
-import android.arch.lifecycle.LiveData;
-import android.arch.paging.DataSource;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.emsam.archcomp.ArchComDatabase;
@@ -15,20 +12,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 
 public class DataRepository
 {
     private static final String TAG = "Repo";
+    private static DatabaseReference fbDatabaseReference;
     private UserInfoDao userDao;
     private LiveData<List<UserInfo>> usersInRange;
-
-    private static DatabaseReference fbDatabaseReference;
 
     public DataRepository(Application application)
     {
@@ -41,18 +37,13 @@ public class DataRepository
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
 
-                for (DataSnapshot child :dataSnapshot.getChildren())
+                for (DataSnapshot child : dataSnapshot.getChildren())
                 {
                     long id = Long.valueOf(child.child("id").getValue().toString());
                     String name = child.child("name").getValue().toString();
                     String email = child.child("email").getValue().toString();
                     int age = Integer.valueOf(child.child("age").getValue().toString());
-                    UserInfo userInfo = new UserInfo.Builder()
-                            .setId(id)
-                            .setName(name)
-                            .setEmail(email)
-                            .setAge(age)
-                            .build();
+                    UserInfo userInfo = new UserInfo.Builder().setId(id).setName(name).setEmail(email).setAge(age).build();
 
                     Log.d(TAG, "onDataChange: " + userInfo.toString());
                 }

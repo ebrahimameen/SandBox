@@ -1,9 +1,6 @@
 package com.example.emsam.archcomp.view;
 
 import android.annotation.SuppressLint;
-import android.arch.paging.PagedListAdapter;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +9,10 @@ import android.widget.TextView;
 
 import com.example.emsam.archcomp.R;
 import com.example.emsam.archcomp.model.UserInfo;
+
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class UserInfoListAdapter extends PagedListAdapter<UserInfo, UserInfoListAdapter.UserViewHolder>
 {
