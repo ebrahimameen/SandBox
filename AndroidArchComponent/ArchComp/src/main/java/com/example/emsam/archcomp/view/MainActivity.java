@@ -1,5 +1,7 @@
 package com.example.emsam.archcomp.view;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -7,6 +9,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.emsam.archcomp.R;
+import com.example.emsam.archcomp.model.UserInfo;
+import com.example.emsam.archcomp.UserSliceProvider;
 import com.example.emsam.archcomp.viewmodel.UsersViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -20,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MainActivity extends AppCompatActivity
 {
     private UsersViewModel usersViewModel;
+    public static UserInfo sLastAddedUser = new UserInfo();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,6 +46,8 @@ public class MainActivity extends AppCompatActivity
             {
                 Log.e("GEN", "onChanged: new update: " + infoList.size());
                 adapter.submitList(infoList);
+                sLastAddedUser = infoList.get(infoList.size() - 1);
+                setTitle(getLastAddedUser(getApplicationContext()));
             }
             else
             {
@@ -91,9 +98,32 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+    }
+
+    @Override
     protected void onDestroy()
     {
         super.onDestroy();
         Log.e("Gen", "MainActivity/onDestroy()");
+    }
+
+    public static String getLastAddedUser(Context context)
+    {
+        return context.getString(R.string.last_added_user, sLastAddedUser.getEmail());
+    }
+
+    public static void updateUser(Context context, String newUser)
+    {
+        if (newUser.equals(sLastAddedUser.getEmail()))
+        {
+            sLastAddedUser.setEmail(newUser);
+
+            // Should notify the URI to let any slices that might be displaying know to update.
+            Uri uri = UserSliceProvider.getUri(context, "userinfo");
+            context.getContentResolver().notifyChange(uri, null);
+        }
     }
 }
